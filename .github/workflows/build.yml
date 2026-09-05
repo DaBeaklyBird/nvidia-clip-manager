@@ -1,0 +1,26 @@
+name: Windows build and recovery tests
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Obtain verified media engine
+        shell: pwsh
+        run: |
+          Invoke-WebRequest 'https://github.com/GyanD/codexffmpeg/releases/download/8.1.1/ffmpeg-8.1.1-essentials_build.zip' -OutFile "$env:RUNNER_TEMP/ffmpeg.zip"
+          if ((Get-FileHash "$env:RUNNER_TEMP/ffmpeg.zip").Hash -ne '6f58ce889f59c311410f7d2b18895b33c03456463486f3b1ebc93d97a0f54541') { throw 'Engine checksum mismatch' }
+          Expand-Archive "$env:RUNNER_TEMP/ffmpeg.zip" "$env:RUNNER_TEMP/ffmpeg"
+          $engine=(Get-ChildItem "$env:RUNNER_TEMP/ffmpeg" -Filter ffmpeg.exe -Recurse | Select-Object -First 1).DirectoryName
+          dotnet run --project tests/Tests.csproj -- $engine "$env:RUNNER_TEMP/clip-manager-tests"
+          if ($LASTEXITCODE) { throw 'Tests failed' }
+      - name: Build installer
+        shell: pwsh
+        run: ./build.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NVIDIA-Clip-Manager-Windows-x64
+          path: artifacts/setup/NvidiaClipManagerSetup.exe

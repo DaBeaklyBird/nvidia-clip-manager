@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net8.0-windows</TargetFramework><UseWindowsForms>true</UseWindowsForms><OutputType>WinExe</OutputType><AssemblyName>NvidiaClipManagerSetup</AssemblyName></PropertyGroup>
+  <ItemGroup><EmbeddedResource Include="../../artifacts/app.zip" LogicalName="payload.zip" /></ItemGroup>
+</Project>

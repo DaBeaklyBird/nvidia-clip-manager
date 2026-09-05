@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+artifacts/
+tools/
+*.user
+*.mp4
+*.mov
+*.log
+*.zip
+*.exe
+*.dll
+test-data/
