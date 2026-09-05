@@ -30,7 +30,7 @@ public sealed class MainForm : Form
         using(var bitmap=new Bitmap(32,32)) { using(var g=Graphics.FromImage(bitmap)) { g.Clear(Green); g.FillRectangle(Brushes.Black,7,8,18,16); using var brush=new SolidBrush(Green); g.FillPolygon(brush,new Point[]{new(13,11),new(13,21),new(21,16)}); } var handle=bitmap.GetHicon(); icon=(Icon)Icon.FromHandle(handle).Clone(); DestroyIcon(handle); }
         Icon=icon;
         var title=new Label{Text="NVIDIA Clip Manager",Font=new("Segoe UI",25,FontStyle.Bold),Location=new(26,20),Size=new(900,45)}; Controls.Add(title);
-        Controls.Add(new Label{Text="Clean clips. Safe originals. Ready to share.",ForeColor=Muted,Location=new(28,72),Size=new(950,25)});
+        Controls.Add(new Label{Text="Watches every folder inside your NVIDIA library. Clean clips. Safe originals. Ready to share.",ForeColor=Muted,Location=new(28,72),Size=new(950,25)});
         var config=new Panel{Location=new(26,113),Size=new(1078,248),BackColor=Card,Anchor=AnchorStyles.Top|AnchorStyles.Left|AnchorStyles.Right}; Controls.Add(config);
         AddFolder(config,"NVIDIA clips",clips,settings.ClipsFolder,18);
         AddFolder(config,"Original backups",backups,settings.BackupFolder,64);
@@ -57,7 +57,7 @@ public sealed class MainForm : Form
         var retry=new Button{Text="Retry selected",Location=new(341,709),Size=new(140,34),Anchor=open.Anchor};
         var details=new Button{Text="Details",Location=new(491,709),Size=new(100,34),Anchor=open.Anchor};
         foreach(var b in new[]{open,restore,retry,details}) { Style(b); Controls.Add(b); }
-        Controls.Add(new Label{Text="Independent open-source app • v0.1.0 • No NVIDIA affiliation",ForeColor=Muted,Location=new(26,752),Size=new(1020,22),Anchor=AnchorStyles.Bottom|AnchorStyles.Left});
+        Controls.Add(new Label{Text="Independent open-source app • v0.1.1 • No NVIDIA affiliation",ForeColor=Muted,Location=new(26,752),Size=new(1020,22),Anchor=AnchorStyles.Bottom|AnchorStyles.Left});
         start.Click+=async(_,_)=>await Begin(false);
         existing.Click+=async(_,_)=>await Begin(true);
         stop.Click+=(_,_)=>Pause();
@@ -111,7 +111,7 @@ public sealed class MainForm : Form
             settings.Watching=true; store.SaveSettings(settings); cancellation=new();
             var engine=new Engine(store,new Media(ToolsFolder())); engine.Changed+=OnChanged;
             var watcher=new Watcher(store,engine); watcher.Status+=text=>Ui(()=>status.Text=text);
-            SetBusy(true); status.Text="Watching"; description.Text=includeExisting?"Existing and new clips will be checked one at a time.":"New clips will be checked once NVIDIA finishes writing.";
+            SetBusy(true); status.Text="Watching"; description.Text=includeExisting?"Existing and new clips in every subfolder will be checked one at a time.":"New clips in every subfolder will be checked once NVIDIA finishes writing.";
             work=Task.Run(()=>watcher.Run(settings,includeExisting,cancellation.Token));
             await work;
         } catch(OperationCanceledException) {status.Text="Paused";}

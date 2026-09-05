@@ -8,7 +8,7 @@ namespace NvidiaClipManagerSetup;
 
 internal static class Program
 {
-    public const string Version="0.1.0";
+    public const string Version="0.1.1";
     public const string EngineUrl="https://github.com/GyanD/codexffmpeg/releases/download/8.1.1/ffmpeg-8.1.1-essentials_build.zip";
     public const string EngineSha="6f58ce889f59c311410f7d2b18895b33c03456463486f3b1ebc93d97a0f54541";
     public static readonly string AppRoot=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Programs","NvidiaClipManager");
@@ -96,7 +96,7 @@ internal sealed class SetupForm:Form
         var terms=new LinkLabel{Text="App license (MIT) and FFmpeg license (GPL)",Location=new(26,231),Size=new(535,24)};Controls.Add(terms);
         terms.LinkClicked+=(_,_)=>Process.Start(new ProcessStartInfo("https://github.com/DaBeaklyBird/nvidia-clip-manager/blob/main/THIRD-PARTY.md"){UseShellExecute=true});
         var agree=new CheckBox{Text="I have reviewed and accept these software licenses.",Location=new(26,260),Size=new(535,28)};Controls.Add(agree);
-        var status=new Label{Text="v0.1.0 • Independent project, not affiliated with NVIDIA or Apple.",Location=new(26,304),Size=new(535,48)};Controls.Add(status);
+        var status=new Label{Text="v0.1.1 • Independent project, not affiliated with NVIDIA or Apple.",Location=new(26,304),Size=new(535,48)};Controls.Add(status);
         var button=new Button{Text="Install",Location=new(435,340),Size=new(120,30),Enabled=false};Controls.Add(button);agree.CheckedChanged+=(_,_)=>button.Enabled=agree.Checked;
         string? installedExe=null;
         button.Click+=async(_,_)=>{

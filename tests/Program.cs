@@ -76,11 +76,12 @@ var watchSettings=new Settings{ClipsFolder=watchRoot,BackupFolder=Path.Combine(t
 using(var watchCancel=new CancellationTokenSource(TimeSpan.FromSeconds(50))){
     var watcher=new Watcher(watchStore,watchEngine);var loop=watcher.Run(watchSettings,false,watchCancel.Token);
     await Task.Delay(500);
-    var fresh=Path.Combine(watchRoot,"fresh.DVR.mp4");File.Copy(fixture,fresh);File.SetLastWriteTimeUtc(fresh,DateTime.UtcNow.AddMinutes(-1));
-    while(!File.Exists(Path.Combine(watchRoot,"fresh.mp4"))&&!watchCancel.IsCancellationRequested)await Task.Delay(500);
+    var nested=Path.Combine(watchRoot,"Minecraft","Survival");Directory.CreateDirectory(nested);
+    var fresh=Path.Combine(nested,"fresh.DVR.mp4");File.Copy(fixture,fresh);File.SetLastWriteTimeUtc(fresh,DateTime.UtcNow.AddMinutes(-1));
+    while(!File.Exists(Path.Combine(nested,"fresh.mp4"))&&!watchCancel.IsCancellationRequested)await Task.Delay(500);
     watchCancel.Cancel();try{await loop;}catch(OperationCanceledException){}
     Assert(File.Exists(oldClip),"watcher excludes preexisting library until requested");
-    Assert(File.Exists(Path.Combine(watchRoot,"fresh.mp4")),"new clip automatically normalized after settling");
+    Assert(File.Exists(Path.Combine(nested,"fresh.mp4")),"new clip in nested folders automatically normalized after settling");
     Assert(watchStore.Jobs().Count(j=>j.State=="Completed")==1,"watcher processes new clip exactly once");
 }
 var secondWatchRoot=Path.Combine(testRoot,"another-watch-folder");Directory.CreateDirectory(secondWatchRoot);

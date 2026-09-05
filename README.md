@@ -10,7 +10,7 @@ Download **NvidiaClipManagerSetup.exe** from [Releases](https://github.com/DaBea
 
 The per-user installer downloads the pinned FFmpeg 8.1.1 Essentials engine from its publisher on GitHub and validates its SHA-256 checksum. Internet access is needed for installation. This early release is unsigned.
 
-Choose your clips and backup folders, then **Start watching**. Select **Start with Windows** if desired. Closing the window leaves the app in the tray; right-click the tray icon to pause or quit. **Process existing clips** also checks the old library. Work runs one clip at a time with low-priority, limited-thread FFmpeg processes.
+Choose the top-level NVIDIA clips folder and a backup folder, then **Start watching**. The app recursively watches every game/app folder inside it, including folders created after the watcher starts. Select **Start with Windows** if desired. Closing the window leaves the app in the tray; right-click the tray icon to pause or quit. **Process existing clips** recursively checks the old library too. Work runs one clip at a time with low-priority, limited-thread FFmpeg processes.
 
 ## What happens to clips?
 
@@ -21,7 +21,7 @@ Choose your clips and backup folders, then **Start watching**. Select **Start wi
 | Healthy regular `.mp4` | Original left as-is |
 | Missing index/data or failed verification | Original retained, **Needs attention** |
 
-`.DVR.mp4` is already an MP4; removing `DVR` cleans its filename. New files are noticed every five seconds and must settle for at least ten seconds and become available for read-only access before processing.
+`.DVR.mp4` is already an MP4; removing `DVR` cleans its filename. New files in the selected folder or any nested folder are noticed every five seconds and must settle for at least ten seconds and become available for read-only access before processing.
 
 The app first tries lossless remuxing. If needed, it re-encodes H.264 video and AAC audio. It checks full decoding, duration, dimensions, audio track count, channels, sample rate, and timestamp preservation before publishing a replacement. Original bytes are kept in a unique backup location outside the watched folder. Naming collisions never overwrite another clip. **Restore original** copies the backup back while keeping the repaired version and backup.
 
