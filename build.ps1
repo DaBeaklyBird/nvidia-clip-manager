@@ -5,6 +5,8 @@ try {
     & $Dotnet publish src/App/App.csproj -c Release -r win-x64 --self-contained true -o artifacts/app
     if($LASTEXITCODE){throw 'App publish failed'}
     Copy-Item LICENSE,THIRD-PARTY.md,README.md artifacts/app
+    New-Item -ItemType Directory -Force -Path artifacts/app/licenses | Out-Null
+    Copy-Item licenses/* artifacts/app/licenses
     Compress-Archive -Path artifacts/app/* -DestinationPath artifacts/app.zip -Force
     & $Dotnet publish src/Installer/Installer.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o artifacts/setup
     if($LASTEXITCODE){throw 'Installer publish failed'}
