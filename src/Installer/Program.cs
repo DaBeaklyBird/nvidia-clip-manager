@@ -18,7 +18,7 @@ internal static class Program
         ApplicationConfiguration.Initialize();
         if(args.Length==2 && args[0]=="--test-extract") { Extract(args[1]); return; }
         if(args.Contains("--uninstall")) { Uninstall(); return; }
-        Application.Run(new SetupForm());
+        Application.Run(new SetupForm(args));
     }
     public static void Extract(string destination)
     {
@@ -88,7 +88,7 @@ internal static class Program
 
 internal sealed class SetupForm:Form
 {
-    public SetupForm()
+    public SetupForm(string[] args)
     {
         Text="Install NVIDIA Clip Manager";ClientSize=new(590,380);StartPosition=FormStartPosition.CenterScreen;FormBorderStyle=FormBorderStyle.FixedDialog;MaximizeBox=false;Font=new("Segoe UI",10);
         Controls.Add(new Label{Text="NVIDIA Clip Manager",Font=new("Segoe UI",22,FontStyle.Bold),Location=new(24,20),Size=new(540,50)});
@@ -105,5 +105,6 @@ internal sealed class SetupForm:Form
             try {installedExe=await Program.Install(s=>status.Text=s); status.Text="Installed. Open the app to choose folders and start watching.";button.Text="Open app";button.Enabled=true;}
             catch(Exception ex){MessageBox.Show(ex.Message,"Setup could not finish");button.Enabled=agree.Enabled=true;}
         };
+        if(args.Length==2 && args[0]=="--preview-screenshot") Shown+=(_,_)=>{using var bitmap=new Bitmap(Width,Height);DrawToBitmap(bitmap,new Rectangle(0,0,Width,Height));bitmap.Save(args[1]);Close();};
     }
 }

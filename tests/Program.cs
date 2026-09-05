@@ -83,6 +83,13 @@ using(var watchCancel=new CancellationTokenSource(TimeSpan.FromSeconds(50))){
     Assert(File.Exists(Path.Combine(watchRoot,"fresh.mp4")),"new clip automatically normalized after settling");
     Assert(watchStore.Jobs().Count(j=>j.State=="Completed")==1,"watcher processes new clip exactly once");
 }
+var secondWatchRoot=Path.Combine(testRoot,"another-watch-folder");Directory.CreateDirectory(secondWatchRoot);
+var otherOld=Path.Combine(secondWatchRoot,"existing.DVR.mp4");File.Copy(fixture,otherOld);File.SetLastWriteTimeUtc(otherOld,DateTime.UtcNow.AddMinutes(-1));
+watchSettings.ClipsFolder=secondWatchRoot;
+using(var cancelSecond=new CancellationTokenSource(TimeSpan.FromSeconds(18))){
+    try{await new Watcher(watchStore,watchEngine).Run(watchSettings,false,cancelSecond.Token);}catch(OperationCanceledException){}
+}
+Assert(File.Exists(otherOld)&&!File.Exists(Path.Combine(secondWatchRoot,"existing.mp4")),"changing watched folders does not automatically process its old library");
 if(args.Length>2){
     var real=Path.Combine(clips,"actual-sample.DVR.mp4");File.Copy(args[2],real);var original=await Media.Hash(real,none);
     settings.ICloudEnabled=false;

@@ -143,7 +143,8 @@ public sealed class Watcher(Store store,Engine engine)
     {
         settings.Validate(); Paths.NoLinks(settings.ClipsFolder); Paths.NoLinks(settings.BackupFolder);
         await engine.RecoverInterrupted(token);
-        var seenPath=Path.Combine(store.Root,"seen.json");
+        var rootKey=Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(Path.GetFullPath(settings.ClipsFolder).TrimEnd('\\','/').ToUpperInvariant())))[..16];
+        var seenPath=Path.Combine(store.Root,"seen-"+rootKey+".json");
         if(File.Exists(seenPath)) seen=new(System.Text.Json.JsonSerializer.Deserialize<Dictionary<string,string>>(File.ReadAllText(seenPath))!,StringComparer.OrdinalIgnoreCase);
         else if(!includeExisting) foreach(var file in Files(settings.ClipsFolder)) seen[file]=Stamp(file);
         if(includeExisting) seen.Clear();

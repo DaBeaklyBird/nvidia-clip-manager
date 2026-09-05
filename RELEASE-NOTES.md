@@ -10,7 +10,7 @@ First Windows x64 release of NVIDIA Clip Manager.
 - Optional iCloud Photos folder handoff, recording timestamps and duplicate protection.
 - Per-user installer with a hash-verified FFmpeg download; self-contained .NET app.
 
-Validation: 26 local automated checks passed. Installer payload extraction and launching the packaged desktop app passed. The UI was visually inspected using its preview mode. An extensively corrupt real NVIDIA recording was refused rather than silently replaced with incomplete footage.
+Validation: 27 local automated checks passed. Installer payload extraction and launching the packaged desktop app passed. The UI was visually inspected using its preview mode. An extensively corrupt real NVIDIA recording was refused rather than silently replaced with incomplete footage.
 
 This is an unsigned early preview. iCloud-to-iPhone synchronization/date ordering and NVIDIA Gallery refresh still need live device testing. Not every damaged recording can be repaired. No originals are deleted; backups should be retained until you have reviewed the results.
 
